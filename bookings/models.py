@@ -34,8 +34,8 @@ class Booking(models.Model):
     date = models.DateField()
     time = models.TimeField()
     tables = models.ManyToManyField(Table)
-    #created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         ordering = ['date', 'time']
