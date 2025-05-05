@@ -41,7 +41,7 @@ class Booking(models.Model):
         ordering = ['date', 'time']
     
     def __str__(self):
-        return f"Booking by {self.user.username} on {self.date} at {self.time}"
+        return f"Booking by {self.user.username} on {self.date} at {self.time} | created at: {self.created_at}"
     
 
 class Menu(models.Model):
