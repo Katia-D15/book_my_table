@@ -10,7 +10,7 @@ class BookingAdmin(SummernoteModelAdmin):
     Lists fields for display in admin, fields for search,
     and fields for filters.
     """
-    list_display = ('user', 'date', 'time', 'status', 'created_at',)
+    list_display = ('user', 'date', 'time', 'guests', 'status', 'created_at',)
     search_fields = ['user__username', 'user__first_name', 'user__last_name',]
     list_filter = ('status', 'created_at',)
 

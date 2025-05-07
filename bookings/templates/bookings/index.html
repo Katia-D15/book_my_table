@@ -1,0 +1,97 @@
+{% extends "base.html"%}
+{% load static%}
+
+{% block content %}
+<!-- Hero image-->
+<h1 class="text-center mb-4">Welcome to BookMyTable</h1>
+<div class="hero-section d-flex align-items-center text-white text-center hero">
+    <div>
+        <h2 class="hero-text">Book your table easily</h2>
+        <a href="#" class="btn btn-inicial">Booking</a>
+    </div>
+</div>
+<!-- Apresentation-->
+<section class="py-5 bg-light">
+    <div class="container text-center">
+        <p class="lead mx-auto">At BookMyTable, we combine tradition and innovation to offer a unique gastronomic experience. 
+            From home-cooked dishes to contemporary specialties, our welcoming atmosphere is ideal for special moments.
+        </p>
+    </div>
+</section>
+<!-- index.html content starts here-->
+ <div class="container-fluid">
+
+    <div class="row show-container">
+        <div class="col-12 col-md-4 d-flex">
+            <div class="card mb-4 border flex-fill">
+                <div class="card-body">
+                    <h5 class="card-title">Menu</h5>
+                    <p class="card-text">Take a look at our delicious dishes.</p>
+                    <a href="{{ menu_url}}" class="btn btn-inicial">See Menu</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-12 col-md-4 d-flex">
+            <div class="card mb-4 border flex-fill">
+                <div class="card-body">
+                    <h5 class="card-title">Bookings</h5>
+                    <p class="card-text">Book your table online with us.</p>
+                    <a href="#" class="btn btn-inicial">Booking</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4 d-flex">
+            <div class="card mb-4 border flex-fill">
+                <div class="card-body">
+                    <h5 class="card-title">Contact</h5>
+                    <p class="card-text">If you have any questions, just contact us.</p>
+                    <a href="#" class="btn btn-inicial">Contact us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center mt-5">
+        <div class="col-12 col-md-3 d-flex">
+            <div class="card mb-4 border border-dark flex-fill">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-users me-2"></i>About Us</h5>
+                    <p class="card-text">We are passionate about connecting food lovers with the best dining experiences.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-3 d-flex">
+            <div class="card mb-4 border border-dark flex-fill">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-user-tie me-2"></i>Meet Our Chefs</h5>
+                    <p class="card-text">Our expert chefs bring global flavors to your plate.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-3 d-flex">
+            <div class="card mb-4 border border-dark flex-fill">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-clock me-2"></i>Opening Hours</h5>
+                    <p class="card-text">Mon-Fri: 11:00-23:00<br>
+                        Sat-Sun: 12:00-23:00
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-3 d-flex">
+            <div class="card mb-4 border border-dark flex-fill">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-map-marker-alt me-2"></i>Find Us</h5>
+                    <p class="card-text">123 Road</p>
+                    <a href="https://maps.google.com" target="_blank" class="btn btn-sm btn-outline-secondary">View Map</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>               
+{% endblock %}

@@ -1,17 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu list</title>
-</head>
-<body>
-    <h1>Menus</h1>
-    {% for menu in object_list %}
-    <h2>{{menu.menu_name}}</h2>
-    <p>Description:{{menu.description}}</p>
-    <p>Price:£{{menu.price}}</p>
-    {% endfor %}
+{% extends "base.html"%}
+
+{% block content%}
+<div class="container-fluid mt-5">
+    <h1 class="text-center mb-4">Menus</h1>
+    <div class="row">
+        {% for menu in object_list %}
+           <div class="col-sm-6 col-md-4 mb-3">
+               <div class="card menu-card border border-solid h-100 d-flex flex-column">
+                   <div class="image-container">
+                    {#<img class="card-img-top" src="{{}}" alt="{{}}">#}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{menu.menu_name}}</h5>
+                        <p class="card-text">Description: {{ menu.description}}</p>
+                        <p>Price: £{{menu.price}}</p>
+                    </div>
+                </div>
+            </div>
+       {% endfor %}
+    </div>
+</div>
     
-</body>
-</html>
+{% endblock%}
