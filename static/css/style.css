@@ -14,7 +14,7 @@ body {
 }
 
 .red-my {
-    color: #E84610;
+    color: #d40012;
 }
 
 .thin {
@@ -38,6 +38,9 @@ body {
     position: relative;
 }
 
+.footer a {
+    text-decoration: none;
+}
 /*====================
       Home page
 ======================*/
@@ -102,14 +105,25 @@ body {
 
 
 /*====================
-   Login page
+   Login, Register page
 ======================*/
 
+.btn-signup {
+    color: #fff;
+    background: #dd4c4c;
+}
 
-/*====================
-   Register page
-======================*/
+.btn-signup:hover {
+    color: #fff;
+    background: #be4949;
+}
 
-.footer a {
-    text-decoration: none;
+.btn-signout {
+    color: #fff;
+    background: rgb(173, 21, 79);
+}
+
+.btn-signout:hover {
+    color: #fff;
+    color:  rgb(117, 15, 54);
 }

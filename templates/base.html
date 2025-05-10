@@ -1,6 +1,11 @@
 {% load static %}
 {% url 'home' as home_url %}
 {% url 'menu' as menu_url %}
+{% url 'booking' as booking_url%}
+{% url 'my_bookings' as my_bookings_url%}
+{% url 'account_login' as login_url %}
+{% url 'account_signup' as signup_url %}
+{% url 'account_logout' as logout_url %}
 
 <!DOCTYPE html>
 <html class="h-100" lang="en">
@@ -47,6 +52,25 @@
                         <a class="nav-link {% if request.path == menu_url %}active" aria-current="page{% endif %}"
                             href="{% url 'menu' %}">Menu</a>
                     </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == booking_url %}active" aria-current="page{% endif %}" href="{% url 'booking' %}">Booking</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == my_bookings_url %}active" aria-current="page{% endif %}" href="{% url 'my_bookings' %}">My Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == logout_url %}active" aria-current="page{% endif %}" href="{% url 'account_logout' %}">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == signup_url %}active" aria-current="page{% endif %}"
+                        href="{% url 'account_signup' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == login_url %}active" aria-current="page{% endif %}" href="{% url 'account_login' %}">Login</a>
+                    </li>
+                    {% endif %}
 
                 </ul>
                 <span class="navbar-text text-muted">
@@ -57,6 +81,11 @@
     </nav>
 
     <main class="flex-shrink-0 main-bg">
+        {% if user.is_authenticated%}
+        <p class="text-end m-3">You are logged in as {{user}}</p>
+        {% else %}
+        <p class="text-end m-3">You are not logged in</p>
+        {% endif%}
 
         {% block content %}
         <!-- Content Goes here -->

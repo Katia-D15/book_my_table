@@ -7,7 +7,11 @@
 <div class="hero-section d-flex align-items-center text-white text-center hero">
     <div>
         <h2 class="hero-text">Book your table easily</h2>
-        <a href="#" class="btn btn-inicial">Booking</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'booking' %}" class="btn btn-inicial">Booking</a>
+        {% else%}
+        <a href="{% url 'account_login' %}" class="btn btn-inicial">Booking</a>
+        {% endif%}
     </div>
 </div>
 <!-- Apresentation-->
@@ -37,7 +41,11 @@
                 <div class="card-body">
                     <h5 class="card-title">Bookings</h5>
                     <p class="card-text">Book your table online with us.</p>
-                    <a href="#" class="btn btn-inicial">Booking</a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'booking' %}" class="btn btn-inicial">Booking</a>
+                    {% else%}
+                    <a href="{% url 'account_login' %}" class="btn btn-inicial">Booking</a>
+                    {% endif%}
                 </div>
             </div>
         </div>
