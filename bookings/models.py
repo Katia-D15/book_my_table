@@ -30,7 +30,7 @@ class Booking(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    guests = models.IntegerField()
+    guests = models.PositiveIntegerField()
     date = models.DateField()
     time = models.TimeField()
     tables = models.ManyToManyField(Table)
