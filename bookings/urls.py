@@ -7,5 +7,5 @@ urlpatterns = [
     path('menu/', views.MenuList.as_view(), name='menu'),
     path('my-bookings/', views.my_bookings, name='my_bookings'),
     path('cancel-booking/<int:booking_id>/', views.cancel_booking, name='cancel_booking'),
-    path('edit-booking/<int:booking_id>/', views.edit_booking, name='edit_booking'),
+    path('edit-guests/<int:booking_id>/', views.edit_guests, name='edit_guests'),
 ]

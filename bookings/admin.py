@@ -10,9 +10,20 @@ class BookingAdmin(SummernoteModelAdmin):
     Lists fields for display in admin, fields for search,
     and fields for filters.
     """
-    list_display = ('user', 'date', 'time', 'guests', 'status', 'created_at',)
+    list_display = ('user', 'date', 'time', 'guests', 'status', 'created_at', 'table_number', 'table_seats')
     search_fields = ['user__username', 'user__first_name', 'user__last_name',]
     list_filter = ('status', 'created_at',)
+    
+    #TEMPORARY maybe remove before submit the project remove this methods here, table_number, table_seats and seats in list_display above
+    def table_number(self, obj):
+        return ",".join(str(int(table.number)) for table in obj.tables.all())
+    
+    table_number.short_description = 'Table Number'
+    
+    def table_seats(self, obj):
+        return ",".join(str(int(table.seats)) for table in obj.tables.all())
+    
+    table_seats.short_description = 'Table Seats'
 
 
 @admin.register(Menu)

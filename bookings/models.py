@@ -6,8 +6,8 @@ class Table(models.Model):
     """
     Stores a single table
     """
-    number = models.IntegerField(unique=True)
-    seats = models.IntegerField()
+    number = models.PositiveIntegerField(unique=True)
+    seats = models.PositiveIntegerField()
     
     class Meta:
         ordering = ['number']
