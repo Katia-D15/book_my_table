@@ -1,4 +1,5 @@
 {% extends "base.html"%}
+{% load static %}
 
 {% block content%}
 <div class="container-fluid mt-5">
@@ -8,11 +9,16 @@
            <div class="col-sm-6 col-md-4 mb-3">
                <div class="card menu-card border border-solid h-100 d-flex flex-column">
                    <div class="image-container">
-                    {#<img class="card-img-top" src="{{}}" alt="{{}}">#}
+                    {% if "placeholder" in menu.menu_image.url %}
+                    <img class="card-img-top" src="{% static 'images/default.jpg'%}" alt="placeholder image">
+                    {% else %}
+                    <img class="card-imag-top" src="{{ menu.menu_image.url }}" alt="{{ menu.menu_name}}">
+                    {% endif %}
                     </div>
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{menu.menu_name}}</h5>
-                        <p class="card-text">Description: {{ menu.description}}</p>
+                        <p class="card-text">Description:</p>
+                        <div>{{ menu.description|safe}}</div>
                         <p>Price: £{{menu.price}}</p>
                     </div>
                 </div>

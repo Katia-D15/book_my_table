@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class Table(models.Model):
@@ -51,6 +52,7 @@ class Menu(models.Model):
     menu_name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
+    menu_image = CloudinaryField('image', default='placeholder')
     
     class Meta:
         ordering = ['menu_name']

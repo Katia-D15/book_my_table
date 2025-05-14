@@ -14,6 +14,8 @@ class BookingForm(forms.ModelForm):
         model = Booking
         fields = ('date', 'time', 'guests',)
         labels = {
+            'date': 'Choose a date for your Booking',
+            'time': 'Choose a time between 11:00 am - 22:00 pm',
             'guests': 'Total number of people (including yourself)',
         }
         
@@ -65,8 +67,8 @@ class BookingForm(forms.ModelForm):
             return selected_time
         
         opening_time = time(11,0)
-        closing_time = time(23,0)
+        last_booking_time = time(22,0)
         
-        if selected_time < opening_time or selected_time > closing_time:
-            raise forms.ValidationError("Please choose a time between 11:00 am - 23:00 pm")
+        if selected_time < opening_time or selected_time > last_booking_time:
+            raise forms.ValidationError("Please choose a time between 11:00 am - 22:00 pm")
         return selected_time
