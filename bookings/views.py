@@ -13,6 +13,9 @@ class MenuList(generic.ListView):
     queryset = Menu.objects.all()
     template_name = "bookings/menu_list.html"
     
+class AboutUs(generic.TemplateView):
+    template_name = "bookings/about_us.html"
+    
     
 def allocate_table(date, time, guests, exclude_booking_id=None):
     """

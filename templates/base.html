@@ -3,6 +3,7 @@
 {% url 'menu' as menu_url %}
 {% url 'booking' as booking_url%}
 {% url 'my_bookings' as my_bookings_url%}
+{% url 'about_us' as about_us_url%}
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
@@ -51,6 +52,9 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == menu_url %}active" aria-current="page{% endif %}"
                             href="{% url 'menu' %}">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == about_us_url %}active" aria-current="page{% endif %}" href="{% url 'about_us' %}">About Us</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
@@ -110,7 +114,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-auto py-3 dark-bg">
+    <footer id="footer" class="footer mt-auto py-3 dark-bg">
         <h5 class="m-0 text-center text-white">Contacts</h5>
         <p class="m-0 text-center text-white">123 Road</p>
         <p class="m-0 text-center text-white">
