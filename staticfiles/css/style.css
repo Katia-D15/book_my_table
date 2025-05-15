@@ -102,7 +102,29 @@ body {
 /*====================
       Booking page
 ======================*/
+#bookingForm {
+    background-color: rgb(245, 218, 203);
+    border-radius: 10px;
+    border: 1px solid #8b8a8a;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
 
+#bookingForm input {
+    width: 70%;
+    margin: 0 auto 15px auto;
+}
+
+.btn-submit {
+    color: #fff;
+    background: #e06565;
+}
+
+.btn-submit:hover {
+    color: #fff;
+    background: #c95c5c;
+}
 
 /*====================
    Login, Register page
@@ -125,5 +147,5 @@ body {
 
 .btn-signout:hover {
     color: #fff;
-    color:  rgb(117, 15, 54);
+    background:  rgb(117, 15, 54);
 }
