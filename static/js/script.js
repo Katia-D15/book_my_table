@@ -11,6 +11,7 @@ function showEditForm(bookingId) {
 
     const formToShow = document.getElementById(`edit-form-${bookingId}`)
     if (formToShow) {
+        formToShow.classList.remove("d-none");
         formToShow.style.display = "block";
     }
 }

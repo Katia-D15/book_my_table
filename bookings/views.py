@@ -100,7 +100,9 @@ def my_bookings(request):
     Displays a list of bookings made by the currently logged-in user,
     ordered by date and time.
     """
-    bookings = Booking.objects.filter(user=request.user).order_by('date', 'time')
+    bookings = Booking.objects.filter(user=request.user,
+                                      date__gte=date.today()
+                                      ).order_by('date', 'time')
     
     return render (
         request,
