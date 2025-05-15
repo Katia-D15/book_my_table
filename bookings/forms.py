@@ -40,7 +40,8 @@ class BookingForm(forms.ModelForm):
         Restrict the number of guests, or 1 or more.
         """
         guests = self.cleaned_data.get('guests')
-        if guests < 1:
+        print(f" guests recebido: {guests!r} ({type(guests)})")
+        if guests is None or guests< 1:
             raise forms.ValidationError("Please select at least 1 guest.")
         return guests
 
