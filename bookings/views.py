@@ -54,6 +54,7 @@ def allocate_table(date, time, guests, exclude_booking_id=None):
 def create_booking(request):
     """
     Present a form for the user to fill out to make a booking.
+    Prevents duplicate bookings for the same user at the same date/time.
     """
     if request.method == "POST":
         booking_form = BookingForm(data=request.POST)
@@ -61,11 +62,21 @@ def create_booking(request):
             booking = booking_form.save(commit = False)
             booking.user = request.user
             
+            existing_booking = Booking.objects.filter(
+                user=request.user,
+                date=booking.date,
+                time=booking.time
+            ).exclude(status='cancelled')
+            
+            if existing_booking.exists():
+                messages.add_message(request, messages.WARNING, 'You already have a booking at this date and time.')
+                return redirect('booking')
+
             tables = allocate_table(booking.date, booking.time, booking.guests)
 
             if not tables:
                 messages.add_message(request, messages.WARNING, 'There are no tables available at this time.')
-                return redirect('create_booking')
+                return redirect('booking')
             
             booking.save()
             booking.tables.set(tables)
