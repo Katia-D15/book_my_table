@@ -41,6 +41,7 @@ body {
 .footer a {
     text-decoration: none;
 }
+
 /*====================
       Home page
 ======================*/
@@ -109,6 +110,7 @@ body {
     padding: 20px;
     max-width: 500px;
     margin: 0 auto;
+    margin-bottom: 25px;
 }
 
 #bookingForm input {
@@ -124,6 +126,11 @@ body {
 .btn-submit:hover {
     color: #fff;
     background: #c95c5c;
+}
+
+.alert-confirmation {
+    max-width: 500px;
+    background-color: #ceebf0;
 }
 
 /*====================

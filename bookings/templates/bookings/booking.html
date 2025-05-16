@@ -7,6 +7,15 @@
   <div class="row">
     <div class="col-md-8 mt-3 offset-md-2">
         <h2 class="text-center mb-3">Make a Booking</h2>
+        <!--Confirmation Alert-->
+        <div class="alert d-flex align-items-center mt-4 alert-confirmation mx-auto" role="alert">
+            <i class="fas fas fa-phone-alt fa-lg me-3"></i>
+        <div>
+        <strong>Confirmation Required:</strong><br>
+        Please confirm your booking as soon as possible by calling the phone number
+        provided below
+        </div>
+    </div>
         <!--Create New Booking-->
         {% if user.is_authenticated %}
         <form id="bookingForm" method="post">

@@ -15,7 +15,10 @@ class MenuList(generic.ListView):
     
 class AboutUs(generic.TemplateView):
     template_name = "bookings/about_us.html"
-    
+
+class BookingPolicy(generic.TemplateView):
+    template_name = "bookings/booking_policy.html"
+   
     
 def allocate_table(date, time, guests, exclude_booking_id=None):
     """

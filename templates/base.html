@@ -4,6 +4,7 @@
 {% url 'booking' as booking_url%}
 {% url 'my_bookings' as my_bookings_url%}
 {% url 'about_us' as about_us_url%}
+{% url 'booking_policy' as booking_policy_url%}
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
@@ -115,10 +116,11 @@
 
     <!-- Footer -->
     <footer id="footer" class="footer mt-auto py-3 dark-bg">
-        <h5 class="m-0 text-center text-white">Contacts</h5>
+        <h5 class="m-0 text-center text-white mb-1">Contacts</h5>
         <p class="m-0 text-center text-white">123 Road</p>
         <p class="m-0 text-center text-white">
             <i class="fas fa-phone-alt me-2"></i>07123456789</p>
+        <p class="m-0 text-center"><a href="{% url 'booking_policy' %}" class="text-white " title="See our Policy">Booking Policy</a></p>
         <p class="m-0 text-center text-white">Follow us:
             <a href="https://www.facebook.com" target="_blank" class="text-white" title="Visit our Facebook">
             <i class="fab fa-facebook-square ms-3"></i>
