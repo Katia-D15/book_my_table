@@ -15,6 +15,10 @@ class TestBookingForm(TestCase):
         booking_form= BookingForm({'guests': ''})
         self.assertFalse(booking_form.is_valid(), msg = 'field guests is valid')
         
+    def test_fields_are_explicit_in_form_metaclass(self):
+        booking_form = BookingForm()
+        self.assertEqual(list(booking_form.Meta.fields), ['date','time','guests'])
+
     def test_booking_form_is_valid(self):
         booking_form= BookingForm(data={'date':'2025-12-15', 'time':'19:00', 'guests':4})
         self.assertTrue(booking_form.is_valid(), msg='BookingForm is not valid')
@@ -36,6 +40,7 @@ class TestBookingForm(TestCase):
         self.assertIn('time', booking_form.errors)
         self.assertEqual(booking_form.errors['time'][0], 'Please choose a time between 11:00 am - 22:00 pm')
         self.assertFalse(booking_form.is_valid(), msg="This time is valid")
-        
+    
+    
 
         
