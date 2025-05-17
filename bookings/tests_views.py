@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django .contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.urls import reverse
 from datetime import date, time
 from unittest.mock import patch
@@ -10,6 +10,8 @@ class TestViews(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="MyUsername",
                                              password= "myPassword")
+        self.client.login(username= "MyUsername",password= "myPassword")
+        
         self.booking= Booking.objects.create(
             user= self.user,
             guests= 4,
@@ -47,13 +49,68 @@ class TestViews(TestCase):
         self.assertTemplateUsed(response, 'bookings/menu_list.html')
     
     def test_logged_in_user_can_my_bookings_page(self):
-        self.client.login(username= "MyUsername",password= "myPassword")
         response = self.client.get(reverse('my_bookings'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'bookings/my_bookings.html')
 
+    
+    def test_create_booking_user_cannot_book_same_date_and_time_twice(self):
+        Booking.objects.create(
+            user=self.user,
+            date=date(2025, 12, 15),
+            time=time(18,0),
+            guests=2)
+
+        response = self.client.post(reverse('booking'), {
+            'date':date(2025, 12, 15),
+            'time':time(18,0),
+            'guests':2 }, follow=True)
+        self.assertEqual(response.status_code, 200)
+        messages = list(response.wsgi_request._messages)
+        self.assertTrue(any("You already have a booking at this date and time." in m.message for m in messages))
+    
+    @patch('bookings.views.allocate_table', return_value=[])
+    def test_create_booking_rejected_if_not_available_table(self, mock_allocate_table):
+        response = self.client.post(reverse('booking'), {
+            'date':date(2025, 12, 15),
+            'time':time(18,0),
+            'guests':2 }, follow=True)
+        
+        self.assertEqual(response.status_code, 200)
+        mock_allocate_table.assert_called_once_with(date(2025, 12, 15), time(18,0), 2)
+        messages = list(response.wsgi_request._messages)
+        self.assertTrue(any("no tables are available for the selected time." in m.message for m in messages))
+        
+    def test_create_booking_successfully(self):
+        response = self.client.post(reverse('booking'), {
+            'date':date(2025, 12, 15),
+            'time':time(18,0),
+            'guests':2 })
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('my_bookings'))
+        messages = list(response.wsgi_request._messages)
+        self.assertTrue(any("Booking made successfully!" in m.message for m in messages))
+    
+    def test_success_message_after_cancel_booking(self):
+        response = self.client.get(
+            reverse('cancel_booking', kwargs={'booking_id': self.booking.id})
+        )
+        self.assertRedirects(response, reverse('my_bookings'))
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, 'cancelled')
+        messages = list(response.wsgi_request._messages)
+        self.assertTrue(any("Booking cancelled successfully!" in str(m.message) for m in messages))
+        
+    
+    def test_warning_message_when_booking_already_cancelled(self):
+        self.booking.status = 'cancelled'
+        self.booking.save()
+        response = self.client.get(
+            reverse('cancel_booking', kwargs={'booking_id': self.booking.id})
+        )
+        self.assertRedirects(response, reverse('my_bookings'))
+    
     def test_edit_guests_rejected_if_status_not_pending(self):
-        self.client.login(username= "MyUsername",password= "myPassword")
         self.booking.status = 'completed'
         self.booking.save()
         response = self.client.post(reverse('edit_guests', kwargs={'booking_id': self.booking.id}),
@@ -63,7 +120,6 @@ class TestViews(TestCase):
         self.assertNotEqual(self.booking.guests, 6)
     
     def test_edit_guests_rejected_if_not_one_day_in_advance(self):
-        self.client.login(username= "MyUsername",password= "myPassword")
         self.booking.status = 'pending'
         self.booking.date = date.today()
         self.booking.save()
@@ -74,7 +130,6 @@ class TestViews(TestCase):
         self.assertNotEqual(self.booking.guests, 6)
             
     def test_edit_guests_rejected_if_no_tables_available(self):
-        self.client.login(username= "MyUsername",password= "myPassword")
         self.booking.status = 'pending'
         self.booking.date = date(2025,12,6)
         self.booking.save()
@@ -90,7 +145,6 @@ class TestViews(TestCase):
             
     
     def test_edit_guests_updated_successfully(self):
-        self.client.login(username= "MyUsername",password= "myPassword")
         self.booking.status = 'pending'
         self.booking.date = date(2025,10,15)
         self.booking.save()
@@ -105,7 +159,6 @@ class TestViews(TestCase):
             
             
     def test_edit_guests_rejected_if_less_than_one(self):
-        self.client.login(username= "MyUsername",password= "myPassword")
         self.booking.status = 'pending'
         self.booking.date = date(2025,11,11)
         self.booking.save()
@@ -119,7 +172,6 @@ class TestViews(TestCase):
             "Please select at least 1 guest" in m.message for m in messages))
         
     def test_edit_guests_invalid_input(self):
-        self.client.login(username= "MyUsername",password= "myPassword")
         self.booking.status = 'pending'
         self.booking.date = date(2025,11,11)
         self.booking.save()
