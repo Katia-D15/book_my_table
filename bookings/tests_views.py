@@ -4,6 +4,7 @@ from django.urls import reverse
 from datetime import date, time
 from unittest.mock import patch
 from .models import Booking, Table
+from bookings.views import allocate_table
 
 class TestViews(TestCase):
     
@@ -15,11 +16,14 @@ class TestViews(TestCase):
         self.booking= Booking.objects.create(
             user= self.user,
             guests= 4,
-            date= date.today(),
+            date= date(2025,12,20),
             time= time(18,0),
         )
-        table = Table.objects.create(number= 2, seats= 4)
-        self.booking.tables.add(table)
+        self.table1 = Table.objects.create(number= 1, seats= 2)
+        self.table2 = Table.objects.create(number= 2, seats= 4)
+        self.table3 = Table.objects.create(number= 3, seats= 6)
+        
+        self.booking.tables.add(self.table2, self.table3)
         
     
     def test_get_home_page(self):
@@ -52,6 +56,15 @@ class TestViews(TestCase):
         response = self.client.get(reverse('my_bookings'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'bookings/my_bookings.html')
+    
+    def test_allocate_table_returns_table_if_available(self):
+        result= allocate_table(date(2025, 12, 20), time(20,0), guests=4)
+        self.assertIsNotNone(result)
+        self.assertEqual(result[0], self.table2)
+        
+    def test_allocate_table_returns_none_if_no_available(self):
+        result= allocate_table(date(2025, 12, 20), time(18,0), guests=4)
+        self.assertIsNone(result)
 
     
     def test_create_booking_user_cannot_book_same_date_and_time_twice(self):
