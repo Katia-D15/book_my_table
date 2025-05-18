@@ -65,6 +65,18 @@ class TestViews(TestCase):
         result = allocate_table(date(2025, 12, 20), time(18, 0), guests=4)
         self.assertIsNone(result)
 
+    def test_allocate_table_combines_tables_if_needed(self):
+        self.table2.delete()
+        self.table3.delete()
+
+        Table.objects.create(number=4, seats=2)
+        Table.objects.create(number=5, seats=2)
+
+        result = allocate_table(date(2025, 12, 22), time(20, 0), guests=4)
+        self.assertIsNotNone(result)
+        total_seats = sum(table.seats for table in result)
+        self.assertGreaterEqual(total_seats, 4)
+
     def test_create_booking_user_cannot_book_same_date_and_time_twice(self):
         Booking.objects.create(
             user=self.user,
