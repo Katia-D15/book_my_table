@@ -2,36 +2,44 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views import generic
 from django.contrib import messages
 from datetime import date, timedelta, datetime
+import itertools
 from .models import Menu, Booking, Table
 from .forms import BookingForm
 
 
 # Create your views here.
 class BookMyTableList(generic.TemplateView):
+    """Displays the home page (index)."""
     template_name = "bookings/index.html"
 
 
 class MenuList(generic.ListView):
+    """Displays a list of menu items."""
     queryset = Menu.objects.all()
     template_name = "bookings/menu_list.html"
 
 
 class AboutUs(generic.TemplateView):
+    """Displays the About Us page."""
     template_name = "bookings/about_us.html"
 
 
 class BookingPolicy(generic.TemplateView):
+    """Displays the Booking Policy page."""
     template_name = "bookings/booking_policy.html"
 
 
 def allocate_table(date, time, guests, exclude_booking_id=None):
     """
-    Search for an available table for a new booking on specific date, time
+    Search for available tables for a booking on specific date, time
     and number of guests, avoiding conflicts with other existing bookings.
 
     start: date and time of booking
 
     end: peoriod of booking
+
+    Returns:
+    list or None: A list of tables if available, otherwise None.
     """
 
     start = datetime.combine(date, time)
@@ -49,13 +57,17 @@ def allocate_table(date, time, guests, exclude_booking_id=None):
             unavailable_table_ids.update(
                 booking.tables.values_list('id', flat=True))
 
-    available_table = (
-        Table.objects.exclude(id__in=unavailable_table_ids).filter(
-            seats__gte=guests).order_by('seats')
+    available_tables = (
+        Table.objects.exclude(id__in=unavailable_table_ids).order_by('seats')
     )
 
-    if available_table.exists():
-        return [available_table.first()]
+    for num_tables in range(1, len(available_tables) + 1):
+        for table_group in itertools.combinations(
+            available_tables, num_tables
+        ):
+            total_seats = sum(table.seats for table in table_group)
+            if total_seats >= guests:
+                return list(table_group)
 
     return None
 
@@ -64,6 +76,8 @@ def create_booking(request):
     """
     Present a form for the user to fill out to make a booking.
     Prevents duplicate bookings for the same user at the same date/time.
+
+    Allocates appropriate tables or shows a warning if none are available.
     """
     if request.method == "POST":
         booking_form = BookingForm(data=request.POST)
@@ -116,8 +130,9 @@ def create_booking(request):
 
 def my_bookings(request):
     """
-    Displays a list of bookings made by the currently logged-in user,
-    ordered by date and time.
+    Displays a list of bookings made by the currently logged-in user.
+
+    Returns only bookings from current day onwards, sorted by date and time.
     """
     bookings = Booking.objects.filter(user=request.user,
                                       date__gte=date.today()

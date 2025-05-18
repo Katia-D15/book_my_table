@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django_summernote.admin import SummernoteModelAdmin
+from django.core.exceptions import ValidationError
 from .models import Table, Booking, Menu
 
 
@@ -8,8 +9,11 @@ class BookingAdmin(SummernoteModelAdmin):
     """
     Admin interface for the Booking model.
 
-    Lists fields for display in admin, fields for search,
-    and fields for filters.
+    Includes:
+    - Display of booking details including tables and capacity.
+    - Support for manually assigning multiple tables to each booking.
+    - Validation to prevent assigning tables that are already booked
+    at the same date and time.
     """
     list_display = ('user',
                     'date',
@@ -21,6 +25,27 @@ class BookingAdmin(SummernoteModelAdmin):
                     'table_seats')
     search_fields = ['user__username', 'user__first_name', 'user__last_name', ]
     list_filter = ('status', 'created_at',)
+    filter_horizontal = ['tables']
+
+    def save_model(self, request, obj, form, change):
+        if obj.date and obj.time:
+
+            for table in form.cleaned_data.get('tables', []):
+                overlapping = Booking.objects.filter(
+                    date=obj.date,
+                    time=obj.time,
+                    tables=table
+                ).exclude(id=obj.id).exclude(status='cancelled')
+
+                if overlapping.exists():
+                    raise ValidationError(
+                        (
+                            f'The table "{table.number}" is already reserved '
+                            f'at this time.'
+                        )
+                    )
+
+        super().save_model(request, obj, form, change)
 
     def table_number(self, obj):
         return ",".join(str(int(table.number)) for table in obj.tables.all())
