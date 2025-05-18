@@ -99,6 +99,9 @@ body {
     flex-grow:1;
 }
 
+.image_menu {
+    width: 100%;
+}
 
 /*====================
       Booking page

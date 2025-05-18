@@ -12,7 +12,7 @@
                     {% if "placeholder" in menu.menu_image.url %}
                     <img class="card-img-top" src="{% static 'images/default.jpg'%}" alt="placeholder image">
                     {% else %}
-                    <img class="card-imag-top" src="{{ menu.menu_image.url }}" width="100%" alt="{{ menu.menu_name}}"
+                    <img class="card-imag-top image_menu" src="{{ menu.menu_image.url }}" alt="{{ menu.menu_name}}"
                     onerror="this.onerror=null; this.src='{% static 'images/default.jpg'%}'">
                     {% endif %}
                     </div>
