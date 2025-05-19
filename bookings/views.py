@@ -72,6 +72,30 @@ def allocate_table(date, time, guests, exclude_booking_id=None):
     return None
 
 
+def user_has_overlapping_booking(user, date, time, exclude_booking_id=None):
+    """
+    It checks if the user already has a booking, that overlaps
+    with the new one.
+    """
+
+    start = datetime.combine(date, time)
+    end = start + timedelta(hours=1)
+
+    bookings = Booking.objects.filter(
+        user=user, date=date).exclude(status='cancelled')
+
+    if exclude_booking_id:
+        bookings = bookings.exclude(id=exclude_booking_id)
+
+    for booking in bookings:
+        start_b = datetime.combine(booking.date, booking.time)
+        end_b = start_b + timedelta(hours=1)
+        if start < end_b and end > start_b:
+            return True
+
+    return False
+
+
 def create_booking(request):
     """
     Present a form for the user to fill out to make a booking.
@@ -85,16 +109,12 @@ def create_booking(request):
             booking = booking_form.save(commit=False)
             booking.user = request.user
 
-            existing_booking = Booking.objects.filter(
-                user=request.user,
-                date=booking.date,
-                time=booking.time
-            ).exclude(status='cancelled')
-
-            if existing_booking.exists():
+            if user_has_overlapping_booking(
+                request.user, booking.date, booking.time
+            ):
                 messages.add_message(
                     request, messages.WARNING,
-                    'You already have a booking at this date and time.'
+                    'You already have a booking that overlaps with this time.'
                     )
                 return redirect('booking')
 
@@ -211,13 +231,24 @@ def edit_guests(request, booking_id):
                         'Please select at least 1 guest.'
                     )
                 else:
-                    booking.guests = guests
-                    tables = allocate_table(
-                        booking.date,
-                        booking.time,
-                        booking.guests,
-                        exclude_booking_id=booking.id
-                    )
+
+                    if user_has_overlapping_booking(
+                        request.user, booking.date, booking.time,
+                        exclude_booking_id=booking_id
+                    ):
+                        messages.add_message(
+                            request, messages.WARNING,
+                            'You already have another booking'
+                            ' that overlaps with this time.'
+                        )
+                    else:
+                        booking.guests = guests
+                        tables = allocate_table(
+                            booking.date,
+                            booking.time,
+                            booking.guests,
+                            exclude_booking_id=booking.id
+                            )
                     if not tables:
                         messages.add_message(
                             request, messages.WARNING,
@@ -239,7 +270,10 @@ def edit_guests(request, booking_id):
                     'Please enter a valid number of guests'
                     )
 
-    bookings = Booking.objects.filter(user=request.user)
+    bookings = Booking.objects.filter(user=request.user,
+                                      date__gte=date.today()
+                                      ).order_by('date', 'time')
+
     return render(request, 'bookings/my_bookings.html', {
             'bookings': bookings,
             'editing_booking': booking,

@@ -92,7 +92,7 @@ class TestViews(TestCase):
         messages = list(response.wsgi_request._messages)
         self.assertTrue(
             any(
-                "You already have a booking at this date and time."
+                "You already have a booking that overlaps with this time."
                 in m.message for m in messages))
 
     @patch('bookings.views.allocate_table', return_value=[])
